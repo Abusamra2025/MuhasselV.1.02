@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#064e3b" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bgGrad)" />
+  <g transform="translate(64, 64) scale(0.75)">
+    <!-- Building 1 -->
+    <rect x="60" y="140" width="130" height="280" rx="16" fill="#1e293b" stroke="#334155" stroke-width="8" />
+    <rect x="85" y="175" width="28" height="28" rx="6" fill="#38bdf8" opacity="0.85" />
+    <rect x="135" y="175" width="28" height="28" rx="6" fill="#38bdf8" opacity="0.85" />
+    <rect x="85" y="225" width="28" height="28" rx="6" fill="#38bdf8" opacity="0.85" />
+    <rect x="135" y="225" width="28" height="28" rx="6" fill="#38bdf8" opacity="0.85" />
+    <rect x="85" y="275" width="28" height="28" rx="6" fill="#38bdf8" opacity="0.85" />
+    <rect x="135" y="275" width="28" height="28" rx="6" fill="#38bdf8" opacity="0.85" />
+    <rect x="85" y="325" width="28" height="28" rx="6" fill="#38bdf8" opacity="0.85" />
+    <rect x="135" y="325" width="28" height="28" rx="6" fill="#38bdf8" opacity="0.85" />
+
+    <!-- Building 2 (Main Tower) -->
+    <rect x="210" y="60" width="160" height="360" rx="20" fill="url(#goldGrad)" stroke="#34d399" stroke-width="8" />
+    <rect x="245" y="100" width="36" height="36" rx="8" fill="#ffffff" opacity="0.9" />
+    <rect x="305" y="100" width="36" height="36" rx="8" fill="#ffffff" opacity="0.9" />
+    <rect x="245" y="155" width="36" height="36" rx="8" fill="#ffffff" opacity="0.9" />
+    <rect x="305" y="155" width="36" height="36" rx="8" fill="#ffffff" opacity="0.9" />
+    <rect x="245" y="210" width="36" height="36" rx="8" fill="#ffffff" opacity="0.9" />
+    <rect x="305" y="210" width="36" height="36" rx="8" fill="#ffffff" opacity="0.9" />
+    <rect x="245" y="265" width="36" height="36" rx="8" fill="#ffffff" opacity="0.9" />
+    <rect x="305" y="265" width="36" height="36" rx="8" fill="#ffffff" opacity="0.9" />
+    <rect x="265" y="340" width="50" height="80" rx="8" fill="#064e3b" />
+
+    <!-- Coin / Currency Emblem -->
+    <circle cx="390" cy="330" r="64" fill="#fbbf24" stroke="#d97706" stroke-width="8" />
+    <text x="390" y="350" font-family="Cairo, sans-serif" font-size="48" font-weight="900" fill="#78350f" text-anchor="middle">ر.س</text>
+  </g>
+</svg>

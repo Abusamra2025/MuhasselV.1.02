@@ -1,0 +1,17 @@
+# تصميم م. أبو أحمد — مصمم ومنفذ Claude — © الحقوق محفوظة
+# Render Blueprint: خدمة ويب + قرص دائم للبيانات (القرص الدائم يتطلب خطة مدفوعة)
+services:
+  - type: web
+    name: mouhassil
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/health
+    envVars:
+      - key: ADMIN_INITIAL_PASSWORD
+        sync: false        # أدخل كلمة مرور قوية (8 أحرف فأكثر) من لوحة Render
+      - key: MUHASSIL_DATA_DIR
+        value: /data
+    disk:
+      name: mouhassil-data
+      mountPath: /data
+      sizeGB: 1

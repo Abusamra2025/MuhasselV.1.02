@@ -1,0 +1,7 @@
+{
+  "name": "Mouhassil — Rental Collection & Property Accounting System",
+  "description": "نظام مُحصّل لإدارة وتحصيل الإيجارات والمحاسبة العقارية المزدوجة ومتابعة العقود والمقبوضات والقوائم المالية",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

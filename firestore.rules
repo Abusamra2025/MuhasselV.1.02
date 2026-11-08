@@ -1,0 +1,144 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper: Get user document from 'users' collection
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    // Helper: Check if current user is Admin
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.email == 'ebow2012@gmail.com' ||
+        request.auth.token.email.matches('.*admin.*') ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && (
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ADMIN' || 
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+        ))
+      );
+    }
+
+    // Helper: Check if current user is Accountant
+    function isAccountant() {
+      return isAuthenticated() && (
+        isAdmin() ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && (
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ACCOUNTANT' || 
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'accountant'
+        ))
+      );
+    }
+
+    // Helper: Check if current user is Cashier
+    function isCashier() {
+      return isAuthenticated() && (
+        isAdmin() ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && (
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'CASHIER' || 
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'cashier'
+        ))
+      );
+    }
+
+    // Helper: Check if current user is Storekeeper
+    function isStorekeeper() {
+      return isAuthenticated() && (
+        isAdmin() ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && (
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'STOREKEEPER' || 
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'storekeeper'
+        ))
+      );
+    }
+
+    // 1. Users collection: Authenticated users can read and create profile; Admin can delete
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin() || (isAuthenticated() && request.auth.uid == userId);
+    }
+
+    // 2. Properties & Units: Read by all authenticated; Managed by Accountant & Admin
+    match /properties/{propId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || isAccountant();
+    }
+
+    match /units/{unitId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || isAccountant();
+    }
+
+    // 3. Contracts: Read by all authenticated; Created and updated by Accountant & Admin
+    match /contracts/{contractId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || isAccountant();
+    }
+
+    // 4. Expenses (سندات الصرف): Created by Accountant; Supervised by Admin
+    match /expenses/{expenseId} {
+      allow read: if isAuthenticated();
+      allow create: if isAccountant() || isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+    // 5. Payments (سندات القبض): Created by Cashier & Accountant
+    match /payments/{paymentId} {
+      allow read: if isAuthenticated();
+      allow create: if isCashier() || isAccountant() || isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+    // 6. Invoices (فواتير الإيجار)
+    match /invoices/{invoiceId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || isAccountant() || isCashier();
+    }
+
+    // 7. Journal Entries (قيود اليومية العامة)
+    match /journalEntries/{entryId} {
+      allow read: if isAuthenticated();
+      allow create: if isAccountant() || isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+    // 8. Tenants (المستأجرون)
+    match /tenants/{tenantId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || isAccountant() || isCashier();
+    }
+
+    // 9. Accounts & Fiscal Periods (دليل الحسابات والفترات المحاسبية)
+    match /accounts/{accountId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /periods/{periodId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // 10. Inventory Items & Transactions (المستودع والمخازن)
+    match /inventoryItems/{itemId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || isStorekeeper();
+    }
+
+    match /inventoryTransactions/{txId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || isStorekeeper();
+    }
+
+    // Fallback: Deny all unmatched
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
